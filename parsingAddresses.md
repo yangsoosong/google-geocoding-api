@@ -40,15 +40,15 @@ differences between Western / other addresses
 ![capture response](/screenShots/missingCasesUpdateTable.PNG)
 
 ## Current status
+Confident that about 90% of 90% of addresses are correctly parsed.
 
+![number of addresses per country](/screenShots/numberOfAddressPerCountry.PNG)
 
 ## issues
 Some challenges I had with -> duplicate addresses for some address(previous one oevrriding when next one is null, solved by resetting the response value)
 xml length -> response is only 8000 characters long and it had limit thus returning null value
 
 some of the address(137) from some countries(country in ('ro','eg','vn','ru','bh','th','ma','ae') contain native characters
-
-![number of addresses per country](/screenShots/numberOfAddressPerCountry.PNG)
 
 some of the address(113) were not accepted by google(zero_results / invalid request)
 ![not accepted requests](/screenShots/notAcceptedRequests.PNG)
