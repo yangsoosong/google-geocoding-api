@@ -123,8 +123,3 @@ Use the `printf()` function.
 <pre><code>This is a code block.
 </code></pre>
 Small offset values zero result
-
-
-This is [an example](http://example.com/ "Title") inline link.
-
-[This link](http://example.net/) has no title attribute.
