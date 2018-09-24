@@ -11,7 +11,7 @@ Outsourcing the task could be a good option. We can send address to the Google(o
 <br />
 The geocoders return rich parsing of the address with the information we need to parse the addresses.
 
-<p align ="center"><img src="/screenShots/xmlExample.PNG"></p>
+<!--<p align ="center"><img src="/screenShots/xmlExample.PNG"></p>-->
 ![xml example](/screenShots/xmlExample.PNG)
 
 ## Parsing process
@@ -51,8 +51,7 @@ differences between Western / other addresses
 
 ## Current status
 Confident that about 90% of 90% of addresses are correctly parsed.
-
-<p align ="center">![number of addresses per country](/screenShots/numberOfAddressPerCountry.PNG)</p>
+![number of addresses per country](/screenShots/numberOfAddressPerCountry.PNG)
 
 ## issues
 #### (solved ones)
