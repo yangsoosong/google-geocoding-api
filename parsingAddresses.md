@@ -51,7 +51,7 @@ differences between Western / other addresses
 ## Current status
 Confident that about 90% of 90% of addresses are correctly parsed.
 
-![number of addresses per country](/screenShots/numberOfAddressPerCountry.PNG)
+<p align ="center">![number of addresses per country](/screenShots/numberOfAddressPerCountry.PNG)</p>
 
 ## issues
 #### (solved ones)
