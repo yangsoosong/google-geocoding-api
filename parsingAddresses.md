@@ -11,7 +11,7 @@ Outsourcing the task could be a good option. We can send address to the Google(o
 <br />
 The geocoders return rich parsing of the address with the information we need to parse the addresses.
 
-<p align ="center">![our custom routine](/screenShots/xmlExample.PNG?style=centerme)</p>
+<p align ="center">![our custom routine](/screenShots/xmlExample.PNG)</p>
 
 ## Parsing process
 
