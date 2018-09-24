@@ -55,17 +55,20 @@ Confident that about 90% of 90% of addresses are correctly parsed.
 
 ## Challenges
 Some *challenges* I had with:
-
-	- When zero_result / invalid request from google
-		-> just put original address from database
-	- previous one overriding when next one is null, solved by resetting the response value xml length -> response is only 8000 characters long and it had limit thus returning null value
-		->Replace carriage return from database to single space
-	- Length of xml was limited in sql(sauthrequest) -> store in a table
-
-few address(137) in 11 countries(country in ('cn', 'jp', 'hk', 'ro','eg','vn','ru','bh','th','ma','ae') contain native characters
-
+<br>
 some of the address(113) were not accepted by google(zero_results / invalid request)
 ![not accepted requests](/screenShots/notAcceptedRequests.PNG)
+	- When zero_result / invalid request from google
+		-> Replace carriage return from database to single space
+		-> just put original address from database for unresponsive ones
+	- previous address overriding when next one is null
+		-> store xml in a temporary table
+	- few address(137) in 11 countries
+		(country in ('cn', 'jp', 'hk', 'ro','eg','vn','ru','bh','th','ma','ae')
+		contain native characters
+		-> Restructure @Address value type to nvarchar instead of varchar
+
+
 
 
 ## Questions
