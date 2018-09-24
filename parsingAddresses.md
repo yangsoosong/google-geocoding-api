@@ -62,7 +62,7 @@ Confident that about 90% of 85% of addresses are correctly parsed. (We currently
 ## Challenges
 Some *challenges* I had with:
 <br>
-1% of the addresses(113) were not accepted by google(zero_results / invalid request)
+1% of the addresses(113) were not accepted by google(zero_results / invalid request) : User put random values / wrong info / google not responding
 ![not accepted requests](/screenShots/notAcceptedRequests.PNG)
 
 	- When zero_result / invalid request from google
@@ -85,7 +85,7 @@ From Geocoding documentation:
 
 >The preferred language has a small influence on the set of results that the API chooses to return, and the order in which they are returned. The geocoder interprets abbreviations differently depending on language, such as the abbreviations for street types, or synonyms that may be valid in one language but not in another. For example, utca and tér are synonyms for street in Hungarian.
 
-**Do we want to parse the addresses differently between Western / other addresses?**
+**Do we want to parse the addresses differently for every country?**
 <br />
 It adds level of complexity to analyze addresses for each country and parse them differently..
 - Western(US, France, German, etc.) -> (premise), <street_number> <route_> (subpremise) : `767(street_number) 5th Avenue(route) #45th Floor(subpremise)`
