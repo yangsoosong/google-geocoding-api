@@ -1,9 +1,7 @@
 # Parsing addresses using [Google Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro)
 
 ## First thoughts
->There are addresses input by user that has only street name and our current procedure is not able to correctly parse those.
-<br />
->There must be algorithm that already exists to parse addresses with *free text input*.
+>There are addresses input by user that has only street name and our current procedure is not able to correctly parse those. There must be algorithm that already exists to parse addresses with *free text input*.
 <br />
 Outsourcing the task could be a good option. We can send address to the Google(or Yahoo or 3rd party) geocoder.
 <br />
@@ -46,17 +44,17 @@ differences between Western / other addresses
 ##### after
 ![capture response](/screenShots/improvedJapan.PNG)
 
-#### Catch missing cases and populate in the table(return original/formatted addresses) -> about 113 address out of 8618
+#### Catch missing cases and populate in the table(return original/formatted addresses)
 ![capture response](/screenShots/missingCasesUpdateTable.PNG)
 
 ## Current status
-Confident that about 90% of 90% of addresses are correctly parsed.
+Confident that about 90% of 85% of addresses are correctly parsed.
 ![number of addresses per country](/screenShots/numberOfAddressPerCountry.PNG)
 
 ## Challenges
 Some *challenges* I had with:
 <br>
-some of the address(113) were not accepted by google(zero_results / invalid request)
+1% of the addresses(113) were not accepted by google(zero_results / invalid request)
 ![not accepted requests](/screenShots/notAcceptedRequests.PNG)
 	- When zero_result / invalid request from google
 		-> Replace carriage return from database to single space
@@ -84,5 +82,5 @@ We also have an option of getting formatted addresses from google but that will 
 <br>
 On the other hand, we cannot use edited formatted address as we are not allowed to manipulate formatted addresses according to the Google's policy.
 
-<pre><code>This is a code block.
+<pre><code>This is a code block. Total of 8618 addresses.
 </code></pre>
