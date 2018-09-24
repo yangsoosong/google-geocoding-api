@@ -75,9 +75,11 @@ Some *challenges* I had with:
 **Do we want to return native characters in the address?**
 
 **Do we want to parse the addresses differently between Western / other addresses?**
+<br />
 It adds level of complexity to analyze addresses for each country and parse them differently..
-- Western(US, France, German, etc.) -> (premise), <street_number> <route_> (subpremise)
-- Korea / Japan -> (subpremise) <sublocality_level_3> <sublocality_level_4> <sublocality_level_2>, <sublocality_level_1>, (locality)
+- Western(US, France, German, etc.) -> (premise), <street_number> <route_> (subpremise) : `767(street_number) 5th Avenue(route) #45th Floor(subpremise)`
+- Korea / Japan -> (subpremise) <sublocality_level_3> <sublocality_level_4> <sublocality_level_2>, <sublocality_level_1>, (locality) :
+`203(premise) Hoehyeon-dong(sublocality_level_2), Jung-gu(sublocality_level_1)`
 - Russia?? Egypt??
 
 We also have an option of getting formatted addresses from google but that will include city, state, zipcode and country in address field.
