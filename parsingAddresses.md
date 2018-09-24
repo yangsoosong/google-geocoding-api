@@ -54,8 +54,9 @@ The geocoders return rich parsing of the address with the information we need to
 ![capture response](/screenShots/missingCasesUpdateTable.PNG)
 
 ## Current status
-Confident that about 90% of 85% of addresses are correctly parsed.
 ![number of addresses per country](/screenShots/numberOfAddressPerCountry.PNG)
+Confident that about 90% of 85% of addresses are correctly parsed. (We currently hold total of 8618 addresses to parse in our system.)
+
 
 
 ## Challenges
