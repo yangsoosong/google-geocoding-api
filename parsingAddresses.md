@@ -28,7 +28,7 @@ The geocoders return rich parsing of the address with the information we need to
 
 ### 2. Get the response from google
 #### Create Web API url with `Google Geocoding API Key`
-![Create WEB API url](/screenShots/BuildAPIurl.PNG)
+![Create WEB API url](/screenShots/BuildGoogleAPIurl.PNG)
 #### Generate OAUTH request
 ![generate OAUTH request](/screenShots/generateOauthRequest.PNG)
 
