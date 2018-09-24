@@ -1,10 +1,7 @@
-USE efront_excel_data
-
-
 TRUNCATE TABLE util_parse_address_yangsoo
 -- Used old procedure to insert new data from manager_address table to util_parse_address table
 INSERT INTO util_parse_address_yangsoo (address_id, original_address, address_1, address_2, address_3, city, [state], zip, country, xmlCode)
-	SELECT	
+	SELECT
 			manager_address_id AS address_id
 			,[address] AS original_address
 			,SUBSTRING([address],1,CHARINDEX(char(13)+char(10),[address])) AS address_1
@@ -37,7 +34,7 @@ INSERT INTO util_parse_address_yangsoo (address_id, original_address, address_1,
 -- Drop temp table if already exists
 DROP TABLE IF EXISTS #Temp
 
-/* 
+/*
 USE temporary table (#Temp) to copy table from manager_address and then deleted the row in #Temp table every time I update the row.
 */
 -- Instead of selecting all, select number that does not exceed 2500 request per day --SELECT *
@@ -47,7 +44,7 @@ USE temporary table (#Temp) to copy table from manager_address and then deleted 
     FROM util_parse_address_yangsoo2
 )
 -- Grab desired rows with RowNumber
-SELECT *  
+SELECT *
 INTO #Temp
 FROM MySelectedRows
 where country in ('jp', 'kr')
@@ -77,7 +74,7 @@ DECLARE @Id int
 -- create temp table to store xml response results(in order to avoid xml length limit error)
 IF OBJECT_ID('tempdb..#xml') IS NOT NULL DROP TABLE #xml
 	CREATE TABLE #xml ( yourXML XML )
-	
+
 -- Run while loop until there is no more row on #Temp.
 WHILE (SELECT count(*) FROM #Temp) > 0
 BEGIN
@@ -88,7 +85,7 @@ BEGIN
 	-- URL call to the Google Geocode API
 	DECLARE @URL varchar(max)
 	-- send url to server with appending original address from util_parse_address table.
-	SET @URL = 'https://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address=' + 
+	SET @URL = 'https://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address=' +
 	-- Replace CARRIAGE RETURN from database with single space as carriage returns were omitted when transformed to url
 	REPLACE(REPLACE(REPLACE((SELECT original_address FROM util_parse_address_yangsoo2 upa WHERE upa.address_id = @Id), char(13), ' '), char(10), ' '), CHAR(13)+CHAR(10), ' ')
 		-- Need API Key here
@@ -115,16 +112,16 @@ BEGIN
 		EXEC @Result = sp_OAGetProperty @obj, 'status', @HTTPStatus OUT
 		-- Put the result directly into temp table
 		INSERT #xml(yourXML)
-		EXEC @Result = sp_OAGetProperty @obj, 'responseXML.xml' -- @Response OUT 
+		EXEC @Result = sp_OAGetProperty @obj, 'responseXML.xml' -- @Response OUT
 	END TRY
 	BEGIN CATCH
 		SET @ErrorMsg = ERROR_MESSAGE()
 		SET @ErrorMsg = 'Error in spGeocode: ' + ISNULL(@ErrorMsg, 'HTTP result is: ' + CAST(@HTTPStatus AS varchar(10)))
 		RAISERROR(@ErrorMsg, 16, 1, @HTTPStatus)
 	END CATCH
-	
+
 	EXEC @Result = sp_OADestroy @Obj
-	
+
 	/* -- Testing error
 	IF (@ErrorMSG IS NOT NULL) OR (@HTTPStatus <> 200)
 	BEGIN
@@ -136,7 +133,7 @@ BEGIN
 
 	-- Attain the response from Google.
 	-- pull the value from the temp table
-	select @XML = yourXML from #xml 
+	select @XML = yourXML from #xml
 	--select 'lenXML' = len(rtrim(convert(nvarchar(max),yourXML))), * from #xml
 	truncate table #xml
 	-- parse xml into parts for City, State, Postalcode, Country and County.
@@ -145,7 +142,7 @@ BEGIN
 	SET @PostalCode = @XML.value('(/GeocodeResponse/result/address_component[type="postal_code"]/short_name) [1]', 'varchar(20)')
 	SET @Country = @XML.value('(/GeocodeResponse/result/address_component[type="country"]/short_name) [1]', 'nvarchar(40)')
 	SET @County = @XML.value('(/GeocodeResponse/result/address_component[type="administrative_area_level_2"]/long_name) [1]', 'varchar(40)')
-	
+
 	-- OPTION 1(For Korean/Japanses addresses).
 	if @country in ('jp', 'kr')
 	SET @Address =
@@ -156,28 +153,28 @@ BEGIN
 		END +
 		-- insert building name in front with comma at the end if exists in xml code
 		CASE WHEN ((ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="premise"]/long_name) [1]', 'nvarchar(40)'), '')) != '')
-				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="premise"]/long_name) [1]', 'nvarchar(40)'), '')) + ', ' 
-			ELSE '' 
+				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="premise"]/long_name) [1]', 'nvarchar(40)'), '')) + ', '
+			ELSE ''
 		END +
 		CASE WHEN ((ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_3"]/long_name) [1]', 'nvarchar(40)'), '')) != '')
-				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_3"]/long_name) [1]', 'nvarchar(40)'), '')) + ', ' 
-			ELSE '' 
+				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_3"]/long_name) [1]', 'nvarchar(40)'), '')) + ', '
+			ELSE ''
 		END +
 		CASE WHEN ((ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_4"]/long_name) [1]', 'nvarchar(40)'), '')) != '')
-				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_4"]/long_name) [1]', 'nvarchar(40)'), '')) + ', ' 
-			ELSE '' 
+				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_4"]/long_name) [1]', 'nvarchar(40)'), '')) + ', '
+			ELSE ''
 		END +
 		CASE WHEN ((ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_2"]/long_name) [1]', 'nvarchar(40)'), '')) != '')
-				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_2"]/long_name) [1]', 'nvarchar(40)'), '')) + ', ' 
-			ELSE '' 
+				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_2"]/long_name) [1]', 'nvarchar(40)'), '')) + ', '
+			ELSE ''
 		END +
 		CASE WHEN ((ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_1"]/long_name) [1]', 'nvarchar(40)'), '')) != '')
-				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_1"]/long_name) [1]', 'nvarchar(40)'), '')) + ', ' 
-			ELSE '' 
+				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="sublocality_level_1"]/long_name) [1]', 'nvarchar(40)'), '')) + ', '
+			ELSE ''
 		END +
 		CASE WHEN ((ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="locality"]/long_name) [1]', 'nvarchar(40)'), '')) != '')
-				THEN ' ' + (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="locality"]/long_name) [1]', 'nvarchar(40)'), '')) 
-			ELSE '' 
+				THEN ' ' + (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="locality"]/long_name) [1]', 'nvarchar(40)'), ''))
+			ELSE ''
 		END
 
 	else
@@ -185,12 +182,12 @@ BEGIN
 	SET @Address =
 		-- insert floor number / building name in front with comma at the end if exists in xml code
 		CASE WHEN ((ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="floor"]/long_name) [1]', 'nvarchar(40)'), '')) != '')
-				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="floor"]/long_name) [1]', 'nvarchar(40)'), '')) + ', ' 
-			ELSE '' 
+				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="floor"]/long_name) [1]', 'nvarchar(40)'), '')) + ', '
+			ELSE ''
 		END +
 		CASE WHEN ((ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="premise"]/long_name) [1]', 'nvarchar(40)'), '')) != '')
-				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="premise"]/long_name) [1]', 'nvarchar(40)'), '')) + ', ' 
-			ELSE '' 
+				THEN (ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="premise"]/long_name) [1]', 'nvarchar(40)'), '')) + ', '
+			ELSE ''
 		END +
 		ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="street_number"]/long_name) [1]', 'nvarchar(40)'), '') + ' ' +
 		ISNULL(@XML.value('(/GeocodeResponse/result/address_component[type="route"]/long_name) [1]', 'nvarchar(40)'), '') + ' ' +
@@ -202,19 +199,19 @@ BEGIN
 
 	---- OPTION 3. Get address with formated address(which includes city, state, postal code and country).
 	--SET @Address = @XML.value('(/GeocodeResponse/result/formatted_address) [1]', 'nvarchar(80)')
-	
+
 
 		--If geocode returns ZERO_RESULTS as GEOCODERESPONSE STATUS, return original address
 		IF @XML.value('(/GeocodeResponse/status) [1]', 'nvarchar(40)') = 'ZERO_RESULTS' or
 			@XML.value('(/GeocodeResponse/status) [1]', 'nvarchar(40)') = 'INVALID_REQUEST'
 			SET @Address = (SELECT original_address FROM util_parse_address_yangsoo2 upa WHERE upa.address_id = @Id)
 
-		--If geocode is not successful at figuring out the address due to bad data(which has original address as TEST, only city or country name), 
+		--If geocode is not successful at figuring out the address due to bad data(which has original address as TEST, only city or country name),
 		--and therefore not returning any street number, route or subpremise,
 		--just return 'formated address' from the server.
 		IF (RTRIM(LTRIM(@Address))) in('', '  ', NULL) --AND (@Country is not null)
 			SET @Address = @XML.value('(/GeocodeResponse/result/formatted_address) [1]', 'nvarchar(80)')
-	
+
 	-- update util_parse_address table with updated values.
 	UPDATE util_parse_address_yangsoo2 SET address_1 = @Address FROM util_parse_address_yangsoo2 upa where address_id = @Id;
 	UPDATE util_parse_address_yangsoo2 SET city = @City FROM util_parse_address_yangsoo2 upa where address_id = @Id;
@@ -242,7 +239,7 @@ select distinct country from efront_excel_data.dbo.util_parse_address_yangsoo2 o
 SELECT * FROM efront_excel_data.dbo.util_parse_address_yangsoo2 upa
 where country is null -- = 'us'
 
-select country ,count(*) as #_of_Addresses 
+select country ,count(*) as #_of_Addresses
 from efront_excel_data.dbo.util_parse_address_yangsoo2
 group by country
 order by #_of_Addresses desc
