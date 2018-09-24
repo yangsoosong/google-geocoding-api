@@ -56,6 +56,7 @@ Some *challenges* I had with:
 <br>
 1% of the addresses(113) were not accepted by google(zero_results / invalid request)
 ![not accepted requests](/screenShots/notAcceptedRequests.PNG)
+
 	- When zero_result / invalid request from google
 		-> Replace carriage return from database to single space
 		-> just put original address from database for unresponsive ones
@@ -65,6 +66,7 @@ Some *challenges* I had with:
 		(country in ('cn', 'jp', 'hk', 'ro','eg','vn','ru','bh','th','ma','ae')
 		contain native characters
 		-> Restructure @Address value type to nvarchar instead of varchar
+	- and more..
 
 
 
