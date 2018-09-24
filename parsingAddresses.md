@@ -1,10 +1,18 @@
 # Parsing addresses using [Google Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro)
 
-| Country        | Number of Addresses           |
-| ------------- |:-------------:|
-| US      | 4602 		 |
-| GB      | 757      |
-| HK      | 266      |
+## First thoughts
+
+
+>There are addresses input by user that has only street name and our current procedure is not able to correctly parse those.
+<br />
+There must be algorithm that already exists to parse addresses with free text input.
+<br />
+Outsourcing the task could be a good option. We can send address to the Google(or Yahoo or 3rd party) geocoder.
+<br />
+The geocoders return rich parsing of the address with the information we need to parse the addresses.
+
+<p align ="center">![our custom routine](/screenShots/xmlExample.PNG?style=centerme)</p>
+
 ## Parsing process
 
 ### 1. Populate original addresses to desired temp table
@@ -18,7 +26,7 @@
 ![c](/screenShots/createXMLtempTableRunWhileLoop.PNG)
 
 ### 2. Get the response from google
-#### Create Web API url
+#### Create Web API url with `Google Geocoding API Key`
 ![Create WEB API url](/screenShots/BuildAPIurl.PNG)
 #### Generate OAUTH request
 ![generate OAUTH request](/screenShots/generateOauthRequest.PNG)
@@ -29,9 +37,10 @@
 #### Capture Response and start parsing(for JP/KR addresses) due to different return types
 differences between Western / other addresses
 * US/Western addresses -> (premise), {street number} {route} (subpremise)
-* Korea/Japan addresses -> (subpremise) <sublocality_level_3> <sublocality_level_4> <sublocality_level_2>, <sublocality_level_1>, <locality>
+* Korea/Japan addresses -> (subpremise) <sublocality_level_3> <sublocality_level_4> <sublocality_level_2>, <sublocality_level_1>, (locality)
 ![capture response](/screenShots/caputreResponse.PNG)
 ##### Before
+>some example of Japanese addresses that are falsely parsed
 ![capture response](/screenShots/previousJapan.PNG)
 ##### after
 ![capture response](/screenShots/improvedJapan.PNG)
@@ -49,6 +58,11 @@ Confident that about 90% of 90% of addresses are correctly parsed.
 Some challenges I had with -> duplicate addresses for some address(previous one oevrriding when next one is null, solved by resetting the response value)
 xml length -> response is only 8000 characters long and it had limit thus returning null value
 
+	- when there is zero_result from google, just put original address
+	- replace carriage counter from database to single space
+	- length of xml was limited in sql(sauthrequest) -> store in a table
+
+
 #### (unsolved ones)
 few address(137) in 11 countries(country in ('cn', 'jp', 'hk', 'ro','eg','vn','ru','bh','th','ma','ae') contain native characters
 
@@ -57,35 +71,17 @@ some of the address(113) were not accepted by google(zero_results / invalid requ
 
 
 ## Questions
->I will show you some example of Japanese address that are not wrongly formatted
+**Do we want to return native characters in the address?**
 
-Returning native characters from the address
-
-differences between Western / other addresses
-- (premise), <street number> <route> (subpremise)
-- (subpremise) <sublocality_level_3> <sublocality_level_4> <sublocality_level_2>, <sublocality_level_1>, <locality>
+**Do we want to parse the addresses differently between Western / other addresses?**
+It adds level of complexity to analyze addresses for each country and parse them differently..
+- Western(US, France, German, etc.) -> (premise), <street_number> <route_> (subpremise)
+- Korea / Japan -> (subpremise) <sublocality_level_3> <sublocality_level_4> <sublocality_level_2>, <sublocality_level_1>, (locality)
+- Russia?? Egypt??
 
 We also have an option of getting formatted addresses from google but that will include city, state, zipcode and country in address field.
+<br>
 On the other hand, we cannot use edited formatted address as we are not allowed to manipulate formatted addresses according to the Google's policy.
-
-It adds level of complexity
-
-
-## First thoughts
-There must be algorithm that already exists to parse addresses with free text input.
-There are ones only with street name and our current procedure does not catch it.
-Way to go through addresses data and insert it to procedure(nested select??)
-
-
-	- when there is zero_result from google, just put original address
-	- replace carriage counter from database to single space
-	- length of xml was limited in sql(sauthrequest) -> store in a table
-
-make the loop so that  until there is no more null value for address_1
-
-Outsourcing the task could be an option. We can send it to the Google (or Yahoo or 3rd party) geocoder. The geocoder will return not only the latitude and longitude of location(which we are not interested in), however, also a rich parsing of the address with the information we need to parse the addresses.
-
-
 
 
 *single asterisks*
@@ -95,8 +91,6 @@ _single underscores_
 **double asterisks**
 
 __double underscores__
-
-test
 
 Use the `printf()` function.
 
