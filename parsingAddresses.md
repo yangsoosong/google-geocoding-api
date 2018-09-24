@@ -35,10 +35,14 @@ The geocoders return rich parsing of the address with the information we need to
 ### 3. store xml result from google to temporary table and parse xml accordingly
 #### Capture Response and start parsing
 ![capture response](/screenShots/parsingWestern.PNG)
-#### Capture Response and start parsing(for JP/KR addresses) due to different return types
-differences between Western / other addresses
-* US/Western addresses -> (premise), {street number} {route} (subpremise)
-* Korea/Japan addresses -> (subpremise) <sublocality_level_3> <sublocality_level_4> <sublocality_level_2>, <sublocality_level_1>, (locality)
+
+- Western(US, France, German, etc.) -> (premise), <street_number> <route_> (subpremise) : `767(street_number) 5th Avenue(route) #45th Floor(subpremise)`
+![not accepted requests](/screenShots/USExample.PNG)
+- Korea / Japan -> (subpremise) <sublocality_level_3> <sublocality_level_4> <sublocality_level_2>, <sublocality_level_1>, (locality) :
+`203(premise) Hoehyeon-dong(sublocality_level_2), Jung-gu(sublocality_level_1)`
+![not accepted requests](/screenShots/KoreaExample.PNG)
+
+#### Continue parsing(for JP/KR addresses) but differently due to different address formats
 ![capture response](/screenShots/caputreResponse.PNG)
 ##### Before
 >some example of Japanese addresses that are falsely parsed
@@ -90,4 +94,5 @@ We also have an option of getting **formatted addresses** from google but that w
 On the other hand, we cannot use edited formatted address as we are not *allowed* to manipulate formatted addresses according to the Google's policy.
 
 <pre><code>This is a code block. Total of 8618 addresses.
+https://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address=Ginza%20Kagayaki%20Bldg.%205F,%201-15-8,%20Ginza,%20Chuo-ku,%20104-0061%20Tokyo,%20Japan&key=AIzaSyAWWLT180oTl-EyZR3Wj7kwua7lfJ1jiR0&language=us
 </code></pre>
