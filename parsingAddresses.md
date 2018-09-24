@@ -1,5 +1,6 @@
 # Parsing addresses using [Google Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro)
 
+
 ## First thoughts
 >There are addresses input by user that has only street name and our current procedure is not able to correctly parse those. There must be algorithm that already exists to parse addresses with *free text input*.
 <br />
@@ -11,6 +12,7 @@ The geocoders return rich parsing of the address with the information we need to
 #### Example of **XML** file from Google Geocoding API
 <!--<p align ="center"><img src="/screenShots/xmlExample.PNG"></p>-->
 ![xml example](/screenShots/xmlExample.png)
+
 
 ## Parsing process
 
@@ -51,6 +53,7 @@ differences between Western / other addresses
 Confident that about 90% of 85% of addresses are correctly parsed.
 ![number of addresses per country](/screenShots/numberOfAddressPerCountry.PNG)
 
+
 ## Challenges
 Some *challenges* I had with:
 <br>
@@ -69,8 +72,6 @@ Some *challenges* I had with:
 	- and more..
 
 
-
-
 ## Questions
 **Do we want to return native characters in the address?**
 
@@ -78,13 +79,15 @@ Some *challenges* I had with:
 <br />
 It adds level of complexity to analyze addresses for each country and parse them differently..
 - Western(US, France, German, etc.) -> (premise), <street_number> <route_> (subpremise) : `767(street_number) 5th Avenue(route) #45th Floor(subpremise)`
+![not accepted requests](/screenShots/USExample.PNG)
 - Korea / Japan -> (subpremise) <sublocality_level_3> <sublocality_level_4> <sublocality_level_2>, <sublocality_level_1>, (locality) :
 `203(premise) Hoehyeon-dong(sublocality_level_2), Jung-gu(sublocality_level_1)`
+![not accepted requests](/screenShots/KoreaExample.PNG)
 - Russia?? Egypt??
 
-We also have an option of getting formatted addresses from google but that will include city, state, zipcode and country in address field.
+We also have an option of getting **formatted addresses** from google but that will include city, state, zipcode and country in address field.
 <br>
-On the other hand, we cannot use edited formatted address as we are not allowed to manipulate formatted addresses according to the Google's policy.
+On the other hand, we cannot use edited formatted address as we are not *allowed* to manipulate formatted addresses according to the Google's policy.
 
 <pre><code>This is a code block. Total of 8618 addresses.
 </code></pre>
