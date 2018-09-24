@@ -78,6 +78,11 @@ Some *challenges* I had with:
 
 ## Questions
 **Do we want to return native characters in the address?**
+<br/>
+From Geocoding documentation:
+>The geocoder does its best to provide a street address that is readable for both the user and locals. To achieve that goal, it returns street addresses in the local language, transliterated to a script readable by the user if necessary, observing the preferred language. All other addresses are returned in the preferred language. Address components are all returned in the same language, which is chosen from the first component.
+
+>The preferred language has a small influence on the set of results that the API chooses to return, and the order in which they are returned. The geocoder interprets abbreviations differently depending on language, such as the abbreviations for street types, or synonyms that may be valid in one language but not in another. For example, utca and tér are synonyms for street in Hungarian.
 
 **Do we want to parse the addresses differently between Western / other addresses?**
 <br />
