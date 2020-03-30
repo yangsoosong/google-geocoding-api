@@ -1,5 +1,4 @@
-
-power point?
+Document to prepare for poweroint for my team.
 # Parsing addresses using [Google Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro)
 
 ## Parsing process
@@ -20,22 +19,7 @@ _single underscores_
 
 __double underscores__
 
-test
 
-Use the `printf()` function.
-
-![Alt text](/path/to/img.jpg)
-
-<p>This is a normal paragraph:</p>
-
-<pre><code>This is a code block.
-</code></pre>
-Small offset values zero result
-
-
-This is [an example](http://example.com/ "Title") inline link.
-
-[This link](http://example.net/) has no title attribute.
 
 Percentages of US addresses
 
